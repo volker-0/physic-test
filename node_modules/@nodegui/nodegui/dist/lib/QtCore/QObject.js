@@ -1,0 +1,49 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.QObject = exports.NodeObject = void 0;
+const EventWidget_1 = require("../core/EventWidget");
+const helpers_1 = require("../utils/helpers");
+const addon_1 = __importDefault(require("../utils/addon"));
+const QVariant_1 = require("./QVariant");
+class NodeObject extends EventWidget_1.EventWidget {
+    inherits(className) {
+        return this.native.inherits(className);
+    }
+    setProperty(name, value) {
+        return this.native.setProperty(name, value);
+    }
+    property(name) {
+        const nativeVariant = this.native.property(name);
+        return new QVariant_1.QVariant(nativeVariant);
+    }
+    setObjectName(objectName) {
+        this.native.setObjectName(objectName);
+    }
+    objectName() {
+        return this.native.objectName();
+    }
+}
+exports.NodeObject = NodeObject;
+class QObject extends NodeObject {
+    constructor(arg) {
+        let native;
+        let parent;
+        if (helpers_1.checkIfNativeElement(arg)) {
+            native = arg;
+        }
+        else if (arg) {
+            parent = arg;
+            native = new addon_1.default.QObject(parent.native);
+        }
+        else {
+            native = new addon_1.default.QObject();
+        }
+        super(native);
+        this.setNodeParent(parent);
+        this.native = native;
+    }
+}
+exports.QObject = QObject;

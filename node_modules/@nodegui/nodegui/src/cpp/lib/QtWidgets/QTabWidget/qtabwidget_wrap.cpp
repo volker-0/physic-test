@@ -1,0 +1,170 @@
+#include "QtWidgets/QTabWidget/qtabwidget_wrap.h"
+
+#include <QWidget>
+
+#include "Extras/Utils/nutils.h"
+#include "QtGui/QIcon/qicon_wrap.h"
+#include "QtWidgets/QWidget/qwidget_wrap.h"
+
+Napi::FunctionReference QTabWidgetWrap::constructor;
+
+Napi::Object QTabWidgetWrap::init(Napi::Env env, Napi::Object exports) {
+  Napi::HandleScope scope(env);
+  char CLASSNAME[] = "QTabWidget";
+  Napi::Function func = DefineClass(
+      env, CLASSNAME,
+      {InstanceMethod("addTab", &QTabWidgetWrap::addTab),
+       InstanceMethod("insertTab", &QTabWidgetWrap::insertTab),
+       InstanceMethod("setTabPosition", &QTabWidgetWrap::setTabPosition),
+       InstanceMethod("indexOf", &QTabWidgetWrap::indexOf),
+       InstanceMethod("setTabText", &QTabWidgetWrap::setTabText),
+       InstanceMethod("setTabIcon", &QTabWidgetWrap::setTabIcon),
+       InstanceMethod("setCurrentIndex", &QTabWidgetWrap::setCurrentIndex),
+       InstanceMethod("currentIndex", &QTabWidgetWrap::currentIndex),
+       InstanceMethod("removeTab", &QTabWidgetWrap::removeTab),
+       InstanceMethod("setTabsClosable", &QTabWidgetWrap::setTabsClosable),
+       QWIDGET_WRAPPED_METHODS_EXPORT_DEFINE(QTabWidgetWrap)});
+  constructor = Napi::Persistent(func);
+  exports.Set(CLASSNAME, func);
+  return exports;
+}
+
+NTabWidget* QTabWidgetWrap::getInternalInstance() { return this->instance; }
+
+QTabWidgetWrap::~QTabWidgetWrap() { extrautils::safeDelete(this->instance); }
+
+QTabWidgetWrap::QTabWidgetWrap(const Napi::CallbackInfo& info)
+    : Napi::ObjectWrap<QTabWidgetWrap>(info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  if (info.Length() == 1) {
+    Napi::Object parentObject = info[0].As<Napi::Object>();
+    NodeWidgetWrap* parentWidgetWrap =
+        Napi::ObjectWrap<NodeWidgetWrap>::Unwrap(parentObject);
+    this->instance = new NTabWidget(
+        parentWidgetWrap
+            ->getInternalInstance());  // this sets the parent to current widget
+  } else if (info.Length() == 0) {
+    this->instance = new NTabWidget();
+  } else {
+    Napi::TypeError::New(env, "Wrong number of arguments")
+        .ThrowAsJavaScriptException();
+  }
+  this->rawData = extrautils::configureQWidget(
+      this->getInternalInstance(), this->getInternalInstance()->getFlexNode(),
+      true);
+}
+
+Napi::Value QTabWidgetWrap::addTab(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  Napi::Object pageObject = info[0].As<Napi::Object>();
+  Napi::Object iconObject = info[1].As<Napi::Object>();
+  Napi::String napiLabel = info[2].As<Napi::String>();
+  std::string label = napiLabel.Utf8Value();
+
+  NodeWidgetWrap* pageObjectWrap =
+      Napi::ObjectWrap<NodeWidgetWrap>::Unwrap(pageObject);
+  QIconWrap* iconWrap = Napi::ObjectWrap<QIconWrap>::Unwrap(iconObject);
+
+  int index =
+      this->instance->addTab(pageObjectWrap->getInternalInstance(),
+                             *iconWrap->getInternalInstance(), label.c_str());
+  return Napi::Number::New(env, index);
+}
+
+Napi::Value QTabWidgetWrap::insertTab(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  int tabPosition = info[0].As<Napi::Number>().Int32Value();
+  Napi::Object pageObject = info[1].As<Napi::Object>();
+  Napi::Object iconObject = info[2].As<Napi::Object>();
+  Napi::String napiLabel = info[3].As<Napi::String>();
+  std::string label = napiLabel.Utf8Value();
+
+  NodeWidgetWrap* pageObjectWrap =
+      Napi::ObjectWrap<NodeWidgetWrap>::Unwrap(pageObject);
+  QIconWrap* iconWrap = Napi::ObjectWrap<QIconWrap>::Unwrap(iconObject);
+
+  int index = this->instance->insertTab(
+      tabPosition, pageObjectWrap->getInternalInstance(),
+      *iconWrap->getInternalInstance(), label.c_str());
+  return Napi::Number::New(env, index);
+}
+
+Napi::Value QTabWidgetWrap::indexOf(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  Napi::Object widgetObject = info[0].As<Napi::Object>();
+
+  NodeWidgetWrap* widgetObjectWrap =
+      Napi::ObjectWrap<NodeWidgetWrap>::Unwrap(widgetObject);
+
+  int index = this->instance->indexOf(widgetObjectWrap->getInternalInstance());
+  return Napi::Number::New(env, index);
+}
+
+Napi::Value QTabWidgetWrap::setTabPosition(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+  int tabPosition = info[0].As<Napi::Number>().Int32Value();
+  this->instance->setTabPosition(
+      static_cast<QTabWidget::TabPosition>(tabPosition));
+  return env.Null();
+}
+
+Napi::Value QTabWidgetWrap::setTabText(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+  int tabIndex = info[0].As<Napi::Number>().Int32Value();
+  Napi::String napiLabel = info[1].As<Napi::String>();
+  std::string label = napiLabel.Utf8Value();
+  this->instance->setTabText(tabIndex, label.c_str());
+  return env.Null();
+}
+
+Napi::Value QTabWidgetWrap::setTabIcon(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  int tabIndex = info[0].As<Napi::Number>().Int32Value();
+  Napi::Object iconObject = info[1].As<Napi::Object>();
+  QIconWrap* iconWrap = Napi::ObjectWrap<QIconWrap>::Unwrap(iconObject);
+  this->instance->setTabIcon(tabIndex, *iconWrap->getInternalInstance());
+  return env.Null();
+}
+
+Napi::Value QTabWidgetWrap::setCurrentIndex(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+  Napi::Number index = info[0].As<Napi::Number>();
+  this->instance->setCurrentIndex(index.Int32Value());
+  return env.Null();
+}
+
+Napi::Value QTabWidgetWrap::currentIndex(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+  int value = this->instance->currentIndex();
+  return Napi::Number::New(env, value);
+}
+
+Napi::Value QTabWidgetWrap::removeTab(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+  Napi::Number index = info[0].As<Napi::Number>();
+  this->instance->removeTab(index.Int32Value());
+  return env.Null();
+}
+
+Napi::Value QTabWidgetWrap::setTabsClosable(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+  Napi::Boolean closable = info[0].As<Napi::Boolean>();
+  this->instance->setTabsClosable(closable.Value());
+  return env.Null();
+}

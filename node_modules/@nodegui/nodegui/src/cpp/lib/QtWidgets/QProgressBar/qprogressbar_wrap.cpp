@@ -1,0 +1,75 @@
+#include "QtWidgets/QProgressBar/qprogressbar_wrap.h"
+
+#include <QWidget>
+
+#include "Extras/Utils/nutils.h"
+#include "QtWidgets/QWidget/qwidget_wrap.h"
+
+Napi::FunctionReference QProgressBarWrap::constructor;
+
+Napi::Object QProgressBarWrap::init(Napi::Env env, Napi::Object exports) {
+  Napi::HandleScope scope(env);
+  char CLASSNAME[] = "QProgressBar";
+  Napi::Function func = DefineClass(
+      env, CLASSNAME,
+      {InstanceMethod("resetFormat", &QProgressBarWrap::resetFormat),
+       InstanceMethod("reset", &QProgressBarWrap::reset),
+       InstanceMethod("setRange", &QProgressBarWrap::setRange),
+       QWIDGET_WRAPPED_METHODS_EXPORT_DEFINE(QProgressBarWrap)});
+  constructor = Napi::Persistent(func);
+  exports.Set(CLASSNAME, func);
+  return exports;
+}
+
+NProgressBar* QProgressBarWrap::getInternalInstance() { return this->instance; }
+
+QProgressBarWrap::~QProgressBarWrap() {
+  extrautils::safeDelete(this->instance);
+}
+
+QProgressBarWrap::QProgressBarWrap(const Napi::CallbackInfo& info)
+    : Napi::ObjectWrap<QProgressBarWrap>(info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  if (info.Length() == 1) {
+    Napi::Object parentObject = info[0].As<Napi::Object>();
+    NodeWidgetWrap* parentWidgetWrap =
+        Napi::ObjectWrap<NodeWidgetWrap>::Unwrap(parentObject);
+    this->instance = new NProgressBar(parentWidgetWrap->getInternalInstance());
+  } else if (info.Length() == 0) {
+    this->instance = new NProgressBar();
+  } else {
+    Napi::TypeError::New(env, "Wrong number of arguments")
+        .ThrowAsJavaScriptException();
+  }
+  this->rawData = extrautils::configureQWidget(
+      this->getInternalInstance(), this->getInternalInstance()->getFlexNode(),
+      true);
+}
+
+Napi::Value QProgressBarWrap::resetFormat(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  this->instance->resetFormat();
+  return env.Null();
+}
+
+Napi::Value QProgressBarWrap::reset(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  this->instance->reset();
+  return env.Null();
+}
+
+Napi::Value QProgressBarWrap::setRange(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Napi::HandleScope scope(env);
+
+  int minimum = info[0].As<Napi::Number>().Int32Value();
+  int maximum = info[1].As<Napi::Number>().Int32Value();
+  this->instance->setRange(minimum, maximum);
+  return env.Null();
+}

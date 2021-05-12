@@ -30,7 +30,7 @@ win.resize(800, 600);
 
 //startText
 startText.setObjectName('starttext');
-startText.setText('Задания по физике. Ответ округлять \nдо десятых. Будет 12 заданий.');
+startText.setText('Задания по физике. Ответ округлять \nдо десятых. Будет 10 заданий.');
 
 //startbuton
 startbutton.setObjectName('startbutton');
@@ -194,12 +194,11 @@ let tasks = [
   [],
   [],
   [],
-  [],
-  [],
 ];
 let taskAnswer = [
   () => ((tasks[0][0]*tasks[0][1])+(tasks[0][2]*tasks[0][3]))/(tasks[0][0]+tasks[0][2]),
   () => (tasks[1][2]-tasks[1][1])/tasks[1][0],
+  () => Math.sqrt(gravity*((tasks[2][0]*tasks[2][1])/tasks[2][2]))
 ]
 
 

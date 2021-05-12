@@ -199,6 +199,7 @@ let tasks = [
 ];
 let taskAnswer = [
   () => ((tasks[0][0]*tasks[0][1])+(tasks[0][2]*tasks[0][3]))/(tasks[0][0]+tasks[0][2]),
+  () => (tasks[1][2]-tasks[1][1])/tasks[1][0],
 ]
 
 

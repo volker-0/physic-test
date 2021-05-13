@@ -182,6 +182,8 @@ const resultStyleSheet =`
 
 //register
 let testnumber;
+let right;
+let answer;
 const gravity = 6.67e-11;
 let tasks = [
   [40,4,60,2],
@@ -218,7 +220,15 @@ startbutton.addEventListener('clicked', () =>{
   testLabel.setText(listOfTasks[testnumber-1]);
 });
 
-
+testButton.addEventListener('clicked', () =>{
+  answer= testEdit.toPlainText();
+  if(Number(answer)==taskAnswer[testnumber-1]().toFixed(1)){
+    right++;
+  };
+  testnumber++;
+  testNumberLabel.setText(`Задание ${testnumber} из 12`);
+  testLabel.setText(listOfTasks[testnumber-1]);
+});
 
 
 

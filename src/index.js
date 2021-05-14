@@ -182,7 +182,7 @@ const resultStyleSheet =`
 
 //register
 let testnumber;
-let right;
+let right = 0;
 let answer;
 const gravity = 6.67e-11;
 let tasks = [
@@ -222,12 +222,29 @@ startbutton.addEventListener('clicked', () =>{
 
 testButton.addEventListener('clicked', () =>{
   answer= testEdit.toPlainText();
+  for (let i = 0; 1 == 1 ; i++) {
+    let part1;
+    let part2;
+    if (answer[i] == ','){
+      part1 = answer.slice(0, i);
+      part2 = answer.slice(i+1);
+      answer = part1 + '.' + part2;
+      break;
+    } else if(answer[i] == '.') break;
+  };
+  if(typeof(Number(answer)) == 'number' && answer!= ''){
   if(Number(answer)==taskAnswer[testnumber-1]().toFixed(1)){
     right++;
   };
   testnumber++;
   testNumberLabel.setText(`Задание ${testnumber} из 12`);
   testLabel.setText(listOfTasks[testnumber-1]);
+  testEdit.setText('')
+  console.log(right);
+  console.log(Number(answer));
+}else{
+  testNumberLabel.setText(`Недопустимое значение`);
+}
 });
 
 

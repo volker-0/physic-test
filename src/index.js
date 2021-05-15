@@ -184,13 +184,16 @@ const resultStyleSheet =`
 let testnumber;
 let right = 0;
 let answer;
+
 const gravity = 6.67e-11;
+const g = 10;
+
 let tasks = [
   [40,4,60,2],
   [40,5,15],
   [20000,20000,6.67e-11],
   [4,10,20],
-  [],
+  [1,30],
   [],
   [],
   [],
@@ -202,6 +205,7 @@ let taskAnswer = [
   () => (tasks[1][2]-tasks[1][1])/tasks[1][0],
   () => Math.sqrt(gravity*((tasks[2][0]*tasks[2][1])/tasks[2][2])),
   () => (tasks[3][1]/tasks[3][2])/tasks[3][0],
+  () => (tasks[4][1]*tasks[4][0])-((g* Math.pow(tasks[4][1],2)/2)),
 ]
 
 
@@ -209,7 +213,7 @@ let listOfTasks=[`Тележка массой ${tasks[0][0]} кг движетс
 listOfTasks[1] = `Скорость движения автомобиля за ${tasks[1][0]} с возросла от ${tasks[1][1]} м/с до ${tasks[1][2]} м/с. Определите ускорение автомобиля.`;
 listOfTasks[2] = `На каком расстоянии друг от друга находятся два шара массами ${tasks[2][0]} и ${tasks[2][1]} кг, если сила тяготения между ними ${tasks[2][2]} Н?`;
 listOfTasks[3] = `Лодка качается на волнах, распространяющихся со скоростью ${tasks[3][0]} м/с, и за ${tasks[3][1]} с совершает ${tasks[3][2]} колебаний. Каково расстояние между соседними\nгребнями волн?`
-
+listOfTasks[4] = `На какой высоте будет мяч через ${tasks[4][0]} с, если его бросить вертикально вверх с начальной скоростью ${tasks[4][1]} м/с?`
 
 
 
@@ -240,8 +244,6 @@ testButton.addEventListener('clicked', () =>{
   testNumberLabel.setText(`Задание ${testnumber} из 12`);
   testLabel.setText(listOfTasks[testnumber-1]);
   testEdit.setText('')
-  console.log(right);
-  console.log(Number(answer));
 }else{
   testNumberLabel.setText(`Недопустимое значение`);
 }

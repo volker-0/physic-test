@@ -191,7 +191,7 @@ const g = 10;
 let tasks = [
   [40,4,60,2],
   [40,5,15],
-  [20000,20000,6.67e-11],
+  [20000,20000,6.67e-5],
   [4,10,20],
   [1,30],
   [],
@@ -205,7 +205,7 @@ let taskAnswer = [
   () => (tasks[1][2]-tasks[1][1])/tasks[1][0],
   () => Math.sqrt(gravity*((tasks[2][0]*tasks[2][1])/tasks[2][2])),
   () => (tasks[3][1]/tasks[3][2])/tasks[3][0],
-  () => (tasks[4][1]*tasks[4][0])-((g* Math.pow(tasks[4][1],2)/2)),
+  () => (tasks[4][1]*tasks[4][0])-((g* Math.pow(tasks[4][0],2)/2)),
 ]
 
 
@@ -215,7 +215,11 @@ listOfTasks[2] = `На каком расстоянии друг от друга 
 listOfTasks[3] = `Лодка качается на волнах, распространяющихся со скоростью ${tasks[3][0]} м/с, и за ${tasks[3][1]} с совершает ${tasks[3][2]} колебаний. Каково расстояние между соседними\nгребнями волн?`
 listOfTasks[4] = `На какой высоте будет мяч через ${tasks[4][0]} с, если его бросить вертикально вверх с начальной скоростью ${tasks[4][1]} м/с?`
 
-
+console.log(taskAnswer[0]());
+console.log(taskAnswer[1]());
+console.log(taskAnswer[2]());
+console.log(taskAnswer[3]());
+console.log(taskAnswer[4]());
 
 startbutton.addEventListener('clicked', () =>{
   win.setCentralWidget(testView);
@@ -226,6 +230,10 @@ startbutton.addEventListener('clicked', () =>{
 
 testButton.addEventListener('clicked', () =>{
   answer= testEdit.toPlainText();
+  if (testnumber == 5){
+    win.setCentralWidget(resultView);
+    resultLabel.setText(`Верно: ${right} из 5`);
+  }
   for (let i = 0; 1 == 1 ; i++) {
     let part1;
     let part2;
@@ -235,9 +243,10 @@ testButton.addEventListener('clicked', () =>{
       answer = part1 + '.' + part2;
       break;
     } else if(answer[i] == '.') break;
+    if(i>100) break;
   };
   if(typeof(Number(answer)) == 'number' && answer!= ''){
-  if(Number(answer)==taskAnswer[testnumber-1]().toFixed(1)){
+  if(Number(answer).toFixed(1)==taskAnswer[testnumber-1]().toFixed(1)){
     right++;
   };
   testnumber++;

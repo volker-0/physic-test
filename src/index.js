@@ -224,16 +224,12 @@ console.log(taskAnswer[4]());
 startbutton.addEventListener('clicked', () =>{
   win.setCentralWidget(testView);
   testnumber = 1;
-  testNumberLabel.setText(`Задание ${testnumber} из 12`);
+  testNumberLabel.setText(`Задание ${testnumber} из ${listOfTasks.length}`);
   testLabel.setText(listOfTasks[testnumber-1]);
 });
 
 testButton.addEventListener('clicked', () =>{
   answer= testEdit.toPlainText();
-  if (testnumber == 5){
-    win.setCentralWidget(resultView);
-    resultLabel.setText(`Верно: ${right} из 5`);
-  }
   for (let i = 0; 1 == 1 ; i++) {
     let part1;
     let part2;
@@ -253,9 +249,13 @@ testButton.addEventListener('clicked', () =>{
   testNumberLabel.setText(`Задание ${testnumber} из 12`);
   testLabel.setText(listOfTasks[testnumber-1]);
   testEdit.setText('')
-}else{
-  testNumberLabel.setText(`Недопустимое значение`);
-}
+  }else{
+    testNumberLabel.setText(`Недопустимое значение`);
+  };
+  if (testnumber == listOfTasks.length + 1){
+    win.setCentralWidget(resultView);
+    resultLabel.setText(`Верно: ${right} из ${listOfTasks.length}`);
+  };
 });
 
 

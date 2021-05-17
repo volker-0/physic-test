@@ -14,6 +14,8 @@ const testButton = new QPushButton();
 const resultLabel = new QLabel();
 const buttonrestart = new QPushButton();
 const buttonedit = new QPushButton();
+const startText2 = new QLabel();
+const startbutton2 = new QPushButton();
 
 //widgets
 const rootView = new QWidget()
@@ -23,6 +25,7 @@ const resultView = new QWidget();
 const mains = new QWidget();
 const testLaybels = new QWidget();
 const testOutputs = new QWidget();
+const mainView2 = new QWidget();
 
 //win
 win.setWindowTitle('Тест по физике');
@@ -35,6 +38,14 @@ startText.setText('Задания по физике. Ответ округлят
 //startbuton
 startbutton.setObjectName('startbutton');
 startbutton.setText('Начать');
+
+//startText2
+startText2.setObjectName('starttext2');
+startText2.setText('Задания по физике. Ответ округлять \nдо десятых. Будет 10 заданий.');
+
+//startbuton2
+startbutton2.setObjectName('startbutton2');
+startbutton2.setText('Начать');
 
 //testNumberLabel
 testNumberLabel.setObjectName('testnumberlabel');
@@ -74,6 +85,11 @@ const mainViewLayout = new FlexLayout();
 mainView.setObjectName('mainView');
 mainView.setLayout(mainViewLayout);
 
+//mainView2
+const mainViewLayout2 = new FlexLayout();
+mainView2.setObjectName('mainView2');
+mainView2.setLayout(mainViewLayout2);
+
 //rootView
 const testViewLayout = new FlexLayout();
 testView.setObjectName('testView');
@@ -112,9 +128,12 @@ resultViewLayout.addWidget(buttonedit);
 mainsLayout.addWidget(startText);
 mainsLayout.addWidget(startbutton);
 mainViewLayout.addWidget(mains);
+mainViewLayout2.addWidget(startText2);
+mainViewLayout2.addWidget(startbutton2);
 rootViewLayout.addWidget(mainView);
 rootViewLayout.addWidget(testView);
 rootViewLayout.addWidget(resultView);
+rootViewLayout.addWidget(mainView2);
 
 //styling
 const mainStyleSheet = `
@@ -126,6 +145,20 @@ const mainStyleSheet = `
     height: 30px;
   }
   #startbutton{
+    width: 200px;
+    height: 100px;
+  }
+`;
+
+const mainStyleSheet2 = `
+  #mainView2 {
+    padding: 40px;
+  }
+  #starttext2{
+    width: 200px;
+    height: 30px;
+  }
+  #startbutton2{
     width: 200px;
     height: 100px;
   }
@@ -182,7 +215,7 @@ const resultStyleSheet =`
 
 //register
 let testnumber;
-let right = 0;
+let right;
 let answer;
 
 const gravity = 6.67e-11;
@@ -224,6 +257,7 @@ console.log(taskAnswer[4]());
 startbutton.addEventListener('clicked', () =>{
   win.setCentralWidget(testView);
   testnumber = 1;
+  right = 0;
   testNumberLabel.setText(`Задание ${testnumber} из ${listOfTasks.length}`);
   testLabel.setText(listOfTasks[testnumber-1]);
 });
@@ -258,10 +292,15 @@ testButton.addEventListener('clicked', () =>{
   };
 });
 
+buttonrestart.addEventListener('clicked', () =>{
+  win.setCentralWidget(mainView2);
+});
+
 
 
 //FINAL
 mainView.setStyleSheet(mainStyleSheet);
+mainView2.setStyleSheet(mainStyleSheet2);
 testView.setStyleSheet(testStyleSheet);
 resultView.setStyleSheet(resultStyleSheet);
 

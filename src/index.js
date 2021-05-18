@@ -14,8 +14,6 @@ const testButton = new QPushButton();
 const resultLabel = new QLabel();
 const buttonrestart = new QPushButton();
 const buttonedit = new QPushButton();
-const startText2 = new QLabel();
-const startbutton2 = new QPushButton();
 
 //widgets
 const rootView = new QWidget()
@@ -25,7 +23,6 @@ const resultView = new QWidget();
 const mains = new QWidget();
 const testLaybels = new QWidget();
 const testOutputs = new QWidget();
-const mainView2 = new QWidget();
 
 //win
 win.setWindowTitle('Тест по физике');
@@ -38,14 +35,6 @@ startText.setText('Задания по физике. Ответ округлят
 //startbuton
 startbutton.setObjectName('startbutton');
 startbutton.setText('Начать');
-
-//startText2
-startText2.setObjectName('starttext2');
-startText2.setText('Задания по физике. Ответ округлять \nдо десятых. Будет 10 заданий.');
-
-//startbuton2
-startbutton2.setObjectName('startbutton2');
-startbutton2.setText('Начать');
 
 //testNumberLabel
 testNumberLabel.setObjectName('testnumberlabel');
@@ -85,11 +74,6 @@ const mainViewLayout = new FlexLayout();
 mainView.setObjectName('mainView');
 mainView.setLayout(mainViewLayout);
 
-//mainView2
-const mainViewLayout2 = new FlexLayout();
-mainView2.setObjectName('mainView2');
-mainView2.setLayout(mainViewLayout2);
-
 //rootView
 const testViewLayout = new FlexLayout();
 testView.setObjectName('testView');
@@ -128,12 +112,9 @@ resultViewLayout.addWidget(buttonedit);
 mainsLayout.addWidget(startText);
 mainsLayout.addWidget(startbutton);
 mainViewLayout.addWidget(mains);
-mainViewLayout2.addWidget(startText2);
-mainViewLayout2.addWidget(startbutton2);
 rootViewLayout.addWidget(mainView);
 rootViewLayout.addWidget(testView);
 rootViewLayout.addWidget(resultView);
-rootViewLayout.addWidget(mainView2);
 
 //styling
 const mainStyleSheet = `
@@ -145,20 +126,6 @@ const mainStyleSheet = `
     height: 30px;
   }
   #startbutton{
-    width: 200px;
-    height: 100px;
-  }
-`;
-
-const mainStyleSheet2 = `
-  #mainView2 {
-    padding: 40px;
-  }
-  #starttext2{
-    width: 200px;
-    height: 30px;
-  }
-  #startbutton2{
     width: 200px;
     height: 100px;
   }
@@ -220,6 +187,7 @@ let answer;
 
 const gravity = 6.67e-11;
 const g = 10;
+const c = 4200;
 
 let tasks = [
   [40,4,60,2],
@@ -227,35 +195,41 @@ let tasks = [
   [20000,20000,6.67e-5],
   [4,10,20],
   [1,30],
-  [],
-  [],
-  [],
-  [],
-  [],
+  [15, 21],
+  [0.5, 16800],
+  [0.5, 0.15, 0.02],
+  [10, 180, 90],
+  [60, 0.04],
 ];
+
 let taskAnswer = [
   () => ((tasks[0][0]*tasks[0][1])-(tasks[0][2]*tasks[0][3]))/(tasks[0][0]+tasks[0][2]),
   () => (tasks[1][2]-tasks[1][1])/tasks[1][0],
   () => Math.sqrt(gravity*((tasks[2][0]*tasks[2][1])/tasks[2][2])),
   () => (tasks[3][1]/tasks[3][2])/tasks[3][0],
   () => (tasks[4][1]*tasks[4][0])-((g* Math.pow(tasks[4][0],2)/2)),
-]
+  () => tasks[5][1]/tasks[5][0],
+  () => tasks[6][0]/(c * tasks[6][1]),
+  () => tasks[7][1]/(tasks[7][0]*tasks[7][2]),
+  () => (tasks[8][0]*tasks[8][2])/tasks[8][1],
+  () => (g *tasks[9][0])/tasks[9][1],
+];
 
 
 let listOfTasks=[`Тележка массой ${tasks[0][0]} кг движется со скоростью ${tasks[0][1]} м/с навстречу тележке массой ${tasks[0][2]} кг, движущейся со скоростью ${tasks[0][3]} м/с. После неупругого\nудара тележки движутся вместе. В каком направлении и с какой скоростью будут двигаться тележки ?`];
 listOfTasks[1] = `Скорость движения автомобиля за ${tasks[1][0]} с возросла от ${tasks[1][1]} м/с до ${tasks[1][2]} м/с. Определите ускорение автомобиля.`;
 listOfTasks[2] = `На каком расстоянии друг от друга находятся два шара массами ${tasks[2][0]} и ${tasks[2][1]} кг, если сила тяготения между ними ${tasks[2][2]} Н?`;
-listOfTasks[3] = `Лодка качается на волнах, распространяющихся со скоростью ${tasks[3][0]} м/с, и за ${tasks[3][1]} с совершает ${tasks[3][2]} колебаний. Каково расстояние между соседними\nгребнями волн?`
-listOfTasks[4] = `На какой высоте будет мяч через ${tasks[4][0]} с, если его бросить вертикально вверх с начальной скоростью ${tasks[4][1]} м/с?`
-
-console.log(taskAnswer[0]());
-console.log(taskAnswer[1]());
-console.log(taskAnswer[2]());
-console.log(taskAnswer[3]());
-console.log(taskAnswer[4]());
+listOfTasks[3] = `Лодка качается на волнах, распространяющихся со скоростью ${tasks[3][0]} м/с, и за ${tasks[3][1]} с совершает ${tasks[3][2]} колебаний. Каково расстояние между соседними\nгребнями волн?`;
+listOfTasks[4] = `На какой высоте будет мяч через ${tasks[4][0]} с, если его бросить вертикально вверх с начальной скоростью ${tasks[4][1]} м/с?`;
+listOfTasks[5] = `Определить силу тока, проходящего через сопротивление ${tasks[5][0]} Ом, если напряжение на нем составляет ${tasks[5][1]} В.`;
+listOfTasks[6] = `На сколько градусов нагреется вода массой ${tasks[6][0]} кг, если ей сообщить ${tasks[6][1]} Дж тепла?`;
+listOfTasks[7] = `На прямой проводник с током длиной ${tasks[7][0]} м, перпендикулярный линиям индукции магнитного поля, действует сила ${tasks[7][1]} Н. Найти ток, если индукция поля ${tasks[7][2]} Тл.`;
+listOfTasks[8] = `Определить напряжение на проводнике, имеющем сопротивление ${tasks[8][0]} Ом, если известно, что за ${tasks[8][1]} с по проводнику прошел заряд ${tasks[8][2]} Кл.`
+listOfTasks[9] = `Человек стоит на полу. Масса его ${tasks[9][0]} кг. Площадь подошв ${tasks[9][1]} м2. Какое давление оказывает человек на пол?`;
 
 startbutton.addEventListener('clicked', () =>{
-  win.setCentralWidget(testView);
+  mainView.close()
+  win.setCentralWidget(testView)
   testnumber = 1;
   right = 0;
   testNumberLabel.setText(`Задание ${testnumber} из ${listOfTasks.length}`);
@@ -287,20 +261,20 @@ testButton.addEventListener('clicked', () =>{
     testNumberLabel.setText(`Недопустимое значение`);
   };
   if (testnumber == listOfTasks.length + 1){
+    testView.close();
     win.setCentralWidget(resultView);
     resultLabel.setText(`Верно: ${right} из ${listOfTasks.length}`);
   };
 });
 
 buttonrestart.addEventListener('clicked', () =>{
-  win.setCentralWidget(mainView2);
+  resultView.close();
+  win.setCentralWidget(mainView);
 });
-
 
 
 //FINAL
 mainView.setStyleSheet(mainStyleSheet);
-mainView2.setStyleSheet(mainStyleSheet2);
 testView.setStyleSheet(testStyleSheet);
 resultView.setStyleSheet(resultStyleSheet);
 

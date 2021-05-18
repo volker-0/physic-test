@@ -254,7 +254,7 @@ testButton.addEventListener('clicked', () =>{
     right++;
   };
   testnumber++;
-  testNumberLabel.setText(`Задание ${testnumber} из 12`);
+  testNumberLabel.setText(`Задание ${testnumber} из ${listOfTasks.length}`);
   testLabel.setText(listOfTasks[testnumber-1]);
   testEdit.setText('')
   }else{

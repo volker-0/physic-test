@@ -23,6 +23,7 @@ const resultView = new QWidget();
 const mains = new QWidget();
 const testLaybels = new QWidget();
 const testOutputs = new QWidget();
+const Others = new QWidget();
 
 //win
 win.setWindowTitle('Тест по физике');
@@ -30,7 +31,7 @@ win.resize(800, 600);
 
 //startText
 startText.setObjectName('starttext');
-startText.setText('Задания по физике. Ответ округлять \nдо десятых. Будет 10 заданий.');
+startText.setText('Задания по физике. g = 10. \n Будет 10 заданий.');
 
 //startbuton
 startbutton.setObjectName('startbutton');
@@ -89,6 +90,11 @@ const mainsLayout = new FlexLayout();
 mains.setObjectName('mains');
 mains.setLayout(mainsLayout);
 
+//others
+const othersLayout = new FlexLayout();
+Others.setObjectName('others');
+Others.setLayout(othersLayout);
+
 //testLaybels
 const testLaybelsLayout = new FlexLayout();
 testLaybels.setObjectName('testLaybels');
@@ -108,72 +114,58 @@ testViewLayout.addWidget(testLaybels);
 testViewLayout.addWidget(testOutputs);
 resultViewLayout.addWidget(resultLabel);
 resultViewLayout.addWidget(buttonrestart);
-resultViewLayout.addWidget(buttonedit);
+//resultViewLayout.addWidget(buttonedit);
 mainsLayout.addWidget(startText);
 mainsLayout.addWidget(startbutton);
 mainViewLayout.addWidget(mains);
-rootViewLayout.addWidget(mainView);
+othersLayout.addWidget(mainView);
+othersLayout.addWidget(resultView);
+rootViewLayout.addWidget(Others);
 rootViewLayout.addWidget(testView);
-rootViewLayout.addWidget(resultView);
 
 //styling
-const mainStyleSheet = `
-  #mainView {
-    padding: 40px;
-  }
-  #starttext{
-    width: 200px;
-    height: 30px;
-  }
-  #startbutton{
-    width: 200px;
-    height: 100px;
-  }
-`;
-
-const testStyleSheet =`
-  #testView {
+const rootStyleSheet = `
+  #rootView{
     padding: 30px;
   }
+  #starttext{
+    width: 370px;
+    height: 50px;
+  }
+  #startbutton{
+    width: 120px;
+    height: 40px;
+  }
+  #others{
+    flex-direction: row;
+  }
   #testnumberlabel{
-    width: 200px;
-    height: 15px;
+    width: 740px;
+    height: 20px;
   }
   #testlabel{
     width: 740px;
-    height: 150px;
+    height: 140px;
   }
   #testOutputs{
     padding-top: 80px;
   }
   #testedit{
     width: 740px;
-    height: 152px;
+    height: 80px;
     margin-bottom: 10px;
   }
   #testbutton{
-    width: 180px;
-    height: 70px;
-  }
-`;
-
-const resultStyleSheet =`
-  #resultView{
-    padding: 30px;
+    width: 140px;
+    height: 50px;
   }
   #resultLabel{
-    margin-bottom: 5px;
-    width: 150px;
-    height: 15px;
+    width: 370px;
+    height: 50px;
   }
   #buttonrestart{
-    margin-bottom: 5px;
-    width: 110px;
-    height: 30px;
-  }
-  #buttonedit{
-    width: 110px;
-    height: 30px;
+    width: 120px;
+    height: 40px;
   }
 `;
 
@@ -227,6 +219,8 @@ listOfTasks[7] = `На прямой проводник с током длино�
 listOfTasks[8] = `Определить напряжение на проводнике, имеющем сопротивление ${tasks[8][0]} Ом, если известно, что за ${tasks[8][1]} с по проводнику прошел заряд ${tasks[8][2]} Кл.`
 listOfTasks[9] = `Человек стоит на полу. Масса его ${tasks[9][0]} кг. Площадь подошв ${tasks[9][1]} м2. Какое давление оказывает человек на пол?`;
 
+
+//start
 startbutton.addEventListener('clicked', () =>{
   mainView.close()
   win.setCentralWidget(testView)
@@ -236,6 +230,7 @@ startbutton.addEventListener('clicked', () =>{
   testLabel.setText(listOfTasks[testnumber-1]);
 });
 
+//answer on question
 testButton.addEventListener('clicked', () =>{
   answer= testEdit.toPlainText();
   for (let i = 0; 1 == 1 ; i++) {
@@ -267,18 +262,17 @@ testButton.addEventListener('clicked', () =>{
   };
 });
 
+
+//restart
 buttonrestart.addEventListener('clicked', () =>{
-  resultView.close();
-  win.setCentralWidget(mainView);
 });
 
 
 //FINAL
-mainView.setStyleSheet(mainStyleSheet);
-testView.setStyleSheet(testStyleSheet);
-resultView.setStyleSheet(resultStyleSheet);
-
-win.setCentralWidget(mainView);
+rootView.setStyleSheet(rootStyleSheet)
+win.setCentralWidget(rootView);
+testView.hide();
+resultView.hide();
 win.show();
 
 global.win = win;

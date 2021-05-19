@@ -222,8 +222,12 @@ listOfTasks[9] = `Человек стоит на полу. Масса его ${t
 
 //start
 startbutton.addEventListener('clicked', () =>{
-  mainView.close()
-  win.setCentralWidget(testView)
+  mainView.hide();
+  testView.show();
+  resultView.hide();
+  mainView.setEnabled(false);
+  testView.setEnabled(true);
+  resultView.setEnabled(false);
   testnumber = 1;
   right = 0;
   testNumberLabel.setText(`Задание ${testnumber} из ${listOfTasks.length}`);
@@ -244,20 +248,26 @@ testButton.addEventListener('clicked', () =>{
     } else if(answer[i] == '.') break;
     if(i>100) break;
   };
-  if(typeof(Number(answer)) == 'number' && answer!= ''){
-  if(Number(answer).toFixed(1)==taskAnswer[testnumber-1]().toFixed(1)){
-    right++;
-  };
-  testnumber++;
-  testNumberLabel.setText(`Задание ${testnumber} из ${listOfTasks.length}`);
-  testLabel.setText(listOfTasks[testnumber-1]);
-  testEdit.setText('')
-  }else{
-    testNumberLabel.setText(`Недопустимое значение`);
-  };
+  if(typeof(Number(answer)) == 'number' && answer!= '' && isNaN(answer) == false){
+    console.log(Number(answer));
+    if(Number(answer).toFixed(1)==taskAnswer[testnumber-1]().toFixed(1)){
+      right++;
+    };
+    testnumber++;
+    testNumberLabel.setText(`Задание ${testnumber} из ${listOfTasks.length}`);
+    testLabel.setText(listOfTasks[testnumber-1]);
+    testEdit.setText('')
+    }else{
+      testNumberLabel.setText(`Недопустимое значение`);
+    };
   if (testnumber == listOfTasks.length + 1){
-    testView.close();
-    win.setCentralWidget(resultView);
+    mainView.hide();
+    testView.hide();
+    resultView.show();
+    mainView.setEnabled(false);
+    testView.setEnabled(false);
+    resultView.setEnabled(true);
+
     resultLabel.setText(`Верно: ${right} из ${listOfTasks.length}`);
   };
 });
@@ -265,14 +275,24 @@ testButton.addEventListener('clicked', () =>{
 
 //restart
 buttonrestart.addEventListener('clicked', () =>{
+  mainView.show();
+  testView.hide();
+  resultView.hide();
+  mainView.setEnabled(true);
+  testView.setEnabled(false);
+  resultView.setEnabled(false);
 });
 
 
 //FINAL
 rootView.setStyleSheet(rootStyleSheet)
 win.setCentralWidget(rootView);
+mainView.show();
 testView.hide();
 resultView.hide();
+mainView.setEnabled(true);
+testView.setEnabled(false);
+resultView.setEnabled(false);
 win.show();
 
 global.win = win;
